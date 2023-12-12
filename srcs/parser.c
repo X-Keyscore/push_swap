@@ -24,34 +24,15 @@ void	putstr(char *s, int fd)
 	write(fd, s, i);
 }
 
-int	is_digit(char *s)
+long	ft_atoi(const char *nptr)
 {
-	size_t	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-	{
-		if (!(s[i] >= '0' && '9' >= s[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	ft_atoi(const char *nptr)
-{
-	int	i;
-	int	neg;
-	int	res;
+	int		i;
+	int		neg;
+	long	res;
 
 	i = 0;
 	neg = 1;
 	res = 0;
-	while (nptr[i] == ' ' || nptr[i] == '\n' || nptr[i] == '\t'
-		|| nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r')
-		i++;
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
 		if (nptr[i] == '-')
@@ -66,26 +47,44 @@ int	ft_atoi(const char *nptr)
 	return (res * neg);
 }
 
+int	is_digit_int(char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	if (s[0] == '-' || s[0] == '+')
+		i++;
+	while (s[i])
+	{
+		if (!(s[i] >= '0' && '9' >= s[i]))
+			return (0);
+		i++;
+	}
+	if (s[0] == '+')
+		i--;
+	if (s[0] == '-' && i > 11)
+		return (0);
+	else if (s[0] != '-' && i > 10)
+		return (0);
+	if (s[0] == '-' && i > 10 && ft_atoi(s) < INT_MIN)
+		return (0);
+	else if (s[0] != '-' && i > 9 && ft_atoi(s) > INT_MAX)
+		return (0);
+	return (1);
+}
+
 void	parser(int argc, char **argv, t_list_node **head)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (i < argc)
 	{
-		if (!is_digit(argv[i]))
-		{
-			putstr("Error\n", 2);
-			list_clear(head);
-			exit(EXIT_FAILURE);
-		}
-		list_push_back(head, ft_atoi(argv[i]));
+		ctrl_err(is_digit_int(argv[i]), head, NULL);
+		ctrl_err(list_push_back(head, ft_atoi(argv[i])), head, NULL);
 		i++;
 	}
-	if (list_peer(*head, list_length(*head)))
-	{
-		putstr("Error\n", 2);
-		list_clear(head);
-		exit(EXIT_FAILURE);
-	}
+	ctrl_err(!list_peer(*head), head, NULL);
 }

@@ -13,9 +13,7 @@
 NAME   = push_swap
 LIBFTDIR = libft/
 CC     = gcc
-CFLAGS = -g #-Wall -Wextra -Werror
-
-#INCLUDE = -L ./libft -lft 
+CFLAGS = -Wall -Wextra -Werror
 
 SRCS   = push_swap.c \
 				srcs/list.c \
@@ -23,7 +21,9 @@ SRCS   = push_swap.c \
 				srcs/parser.c \
 				srcs/instruction.c \
 				srcs/algorithm.c \
-				srcs/algorithm_annex.c \
+				srcs/algorithm_f_smallest.c \
+				srcs/algorithm_f_biggest.c \
+				srcs/algorithm_f_inferior.c \
 
 OBJS = ${SRCS:.c=.o}
 
@@ -31,16 +31,12 @@ all:	${NAME}
 
 ${NAME}: $(OBJS)
 	${CC} ${FLAGS} ${OBJS} -o ${NAME}
-#	make -C $(LIBFTDIR)
 
-#${INCLUDE}
 clean:
 	rm -f ${OBJS} ${NAME}
-#	@cd $(LIBFTDIR) && $(MAKE) clean
 
 fclean: clean
 	rm -f ${NAME}
-#	@cd $(LIBFTDIR) && $(MAKE) fclean
 
 re: clean all
 

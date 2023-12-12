@@ -12,112 +12,88 @@
 
 #include "../push_swap.h"
 
+/**
+** @return 1 if list is sorted or 0
+**/
 int	is_sorted(t_list_node *head)
 {
-	t_list_node *tmp;
+	t_list_node	*tmp;
 
-	if (head == NULL)
-			return (1);
+	if (!head)
+		return (1);
 	tmp = head;
 	while (tmp->next)
 	{
 		if (tmp->data >= tmp->next->data)
 			return (0);
-		tmp=tmp->next;
+		tmp = tmp->next;
 	}
 	return (1);
 }
 
 /**
-** @param end_index stop comparison at this index
-** @return 1 if the node data is the smallest or else 0
+** @return 1 if there are still numbers smaller than max or 0 
 **/
-int	is_smallest(t_list_node *head, size_t end_index)
+int	below_max(t_list_node *head, long max)
 {
-	t_list_node	*cmp;
-	size_t index;
+	t_list_node	*tmp;
 
-	index = 0;
-	cmp = head;
-	while (head && index < end_index)
+	tmp = head;
+	while (tmp)
 	{
-		if (head->data < cmp->data)
-			return (0);
-		head = head->next;
-		index++;
+		if (tmp->data <= max && !is_biggest_in(tmp, head))
+			return (1);
+		tmp = tmp->next;
 	}
-	return (1);
+	return (0);
 }
 
-int	is_smallest_in(t_list_node *stack_1, t_list_node *stack_2, size_t end_index)
+/**
+** @brief Sorted optimized to create packages from smallest to largest.
+** The smallest numbers in the center and the largest on the outside.
+**/
+void	pre_sort(t_list_node **stack_1, t_list_node **stack_2,
+	long max, int push_mode)
 {
-	size_t index;
-
-	index = 0;
-	while (stack_1 && stack_2 && index < end_index)
+	max = (long)get_smallest_value(*stack_1) + max;
+	while (list_length(*stack_1) > 1)
 	{
-		if (stack_1->data < stack_2->data)
-			return (0);
-		stack_1 = stack_1->next;
-		index++;
-	}
-	return (1);
-}
-
-
-size_t	move_top_smallest(t_list_node **head)
-{
-	int			type_move;
-	size_t	smallest_index;
-	size_t	step;
-	size_t	op;
-
-	op = 0;
-	if (!*head)
-		return (op);
-	type_move = 1;
-	smallest_index = get_smallest_index(*head);
-	if (smallest_index > (list_length(*head) / 2))
-		type_move = 0;
-	if (type_move)
-		step = smallest_index;
-	else
-		step = list_length(*head) - smallest_index;
-	while (step--)
-	{
-		if (type_move)
-			ra_rb(head, 1);
-		else
-			rra_rrb(head, 1);
-		op++;
-	}
-	return (op);
-}
-
-size_t	algorithm(t_list_node **stack_1, t_list_node **stack_2)
-{
-	size_t	stack_1_len;
-	size_t	safe_step;
-	size_t	op;
-	int			loop;
-
-	op = 0;
-	loop = 1;
-	safe_step = 0;
-	while (loop)
-	{
-		if (!*stack_2 && is_sorted(*stack_1))
-			break ;
-		if (is_smallest(*stack_1, list_length(*stack_1) - safe_step))
+		while (below_max(*stack_1, max))
 		{
-			op += ra_rb(stack_1, 0);
-			safe_step++;
+			if ((*stack_1)->data <= max && !is_biggest(*stack_1))
+			{
+				ctrl_err(pa_pb(stack_1, stack_2, 1), stack_1, stack_2);
+				if (push_mode)
+					ctrl_err(ra_rb(stack_2, 1), stack_1, stack_2);
+			}
+			else if ((*stack_1)->data <= max + 30 && !is_biggest(*stack_1))
+			{
+				ctrl_err(pa_pb(stack_1, stack_2, 1), stack_1, stack_2);
+				if (!push_mode)
+					ctrl_err(ra_rb(stack_2, 1), stack_1, stack_2);
+			}
+			else
+				ctrl_err(ra_rb(stack_1, 0), stack_1, stack_2);
 		}
-		else
-			op += pa_pb(stack_1, stack_2, 1);
-		op += move_top_smallest(stack_2);
-		if (is_smallest_in(*stack_1, *stack_2, list_length(*stack_1) - safe_step))
-			op += pa_pb(stack_2, stack_1, 0);
+		max = (long)get_smallest_value(*stack_1) + 42;
+		push_mode *= -1;
 	}
-	return (op);
+}
+
+void	algorithm(t_list_node **stack_1, t_list_node **stack_2)
+{
+	long		max;
+	int			push_mode;
+
+	push_mode = -1;
+	max = 42;
+	if (!*stack_2 && is_sorted(*stack_1))
+		return ;
+	pre_sort(stack_1, stack_2, max, push_mode);
+	while (*stack_2)
+	{
+		ctrl_err(move_top_inferior_at_in(*stack_1, stack_2, 1),
+			stack_1, stack_2);
+		ctrl_err(pa_pb(stack_2, stack_1, 0), stack_1, stack_2);
+	}
 }

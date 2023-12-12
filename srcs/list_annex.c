@@ -12,7 +12,7 @@
 
 #include "../push_swap.h"
 
-int	list_peer(t_list_node *head, size_t length)
+int	list_peer(t_list_node *head)
 {
 	t_list_node	*head_cmp;
 
@@ -32,8 +32,9 @@ int	list_peer(t_list_node *head, size_t length)
 
 void	list_clear(t_list_node **head)
 {
-	t_list_node	*prev = *head;
+	t_list_node	*prev;
 
+	prev = *head;
 	while (*head)
 	{
 		*head = (*head)->next;

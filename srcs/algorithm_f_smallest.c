@@ -13,28 +13,25 @@
 #include "../push_swap.h"
 
 /**
-** @param main_node must not be null
+** @return The smallest number in the list
 **/
-size_t	get_smallest_index(t_list_node *main_node)
+int	get_smallest_value(t_list_node *head)
 {
-	t_list_node	*min_node;
-	size_t	min_i;
-	size_t i;
+	t_list_node	*tmp;
+	size_t		i;
+	int			min_value;
 
-	if (!main_node->next)
+	if (!head)
 		return (0);
-	min_node = main_node;
-	min_i = 0;
-	i = 0;
-	while (main_node)
+	min_value = head->data;
+	tmp = head;
+	i = 1;
+	while (tmp && tmp->next)
 	{
-		if (min_node->data > main_node->data)
-		{
-			min_node = main_node;
-			min_i = i;
-		}
-		main_node = main_node->next;
+		if (min_value > tmp->next->data)
+			min_value = tmp->next->data;
+		tmp = tmp->next;
 		i++;
 	}
-	return (min_i);
+	return (min_value);
 }

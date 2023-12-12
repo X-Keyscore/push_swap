@@ -13,16 +13,18 @@
 #include "../push_swap.h"
 
 /**
-** @brief Take the first element at the top of stack_pop and place it on stack_push.
+** @brief Take the first element at the top of stack_pop
+** and place it on stack_push.
 ** Does nothing if stack_pop is empty.
 */
-size_t	pa_pb(t_list_node **stack_pop, t_list_node **stack_push, int mode)
+int	pa_pb(t_list_node **stack_pop, t_list_node **stack_push, int mode)
 {
 	if (!*stack_pop)
+		return (1);
+	if (!list_push_front(stack_push, (*stack_pop)->data))
 		return (0);
-	list_push_front(stack_push, (*stack_pop)->data);
 	list_pop_front(stack_pop);
-	if (!mode)
+	if (mode == 0)
 		putstr("pa\n", 1);
 	else
 		putstr("pb\n", 1);
@@ -33,13 +35,14 @@ size_t	pa_pb(t_list_node **stack_pop, t_list_node **stack_push, int mode)
 ** @brief Shifts all elements of stack one position up.
 ** The first element becomes the last.
 */
-size_t	ra_rb(t_list_node **stack, int mode)
+int	ra_rb(t_list_node **stack, int mode)
 {
 	if (!*stack)
+		return (1);
+	if (!list_push_back(stack, (*stack)->data))
 		return (0);
-	list_push_back(stack, (*stack)->data);
 	list_pop_front(stack);
-	if (!mode)
+	if (mode == 0)
 		putstr("ra\n", 1);
 	else
 		putstr("rb\n", 1);
@@ -50,18 +53,19 @@ size_t	ra_rb(t_list_node **stack, int mode)
 ** @brief Move all elements in the stack one position down.
 ** The last element becomes the first.
 */
-size_t	rra_rrb(t_list_node **stack, int mode)
+int	rra_rrb(t_list_node **stack, int mode)
 {
-	t_list_node *temp;
+	t_list_node	*tmp;
 
 	if (!*stack)
+		return (1);
+	tmp = (*stack);
+	while (tmp->next)
+		tmp = tmp->next;
+	if (!list_push_front(stack, tmp->data))
 		return (0);
-	temp = (*stack);
-	while (temp->next)
-		temp = temp->next;
-	list_push_front(stack, temp->data);
 	list_pop_back(stack);
-	if (!mode)
+	if (mode == 0)
 		putstr("rra\n", 1);
 	else
 		putstr("rrb\n", 1);

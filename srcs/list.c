@@ -25,62 +25,51 @@ size_t	list_length(t_list_node *head)
 	return (count);
 }
 
-/**
-* Insert an element at the begin of list
-* @param head_node struct t_list_node
-* @param data Your data
-*/
-void	list_push_front(t_list_node **head, int data)
+int	list_push_front(t_list_node **head, int data)
 {
-  t_list_node *new_node;
+	t_list_node	*new_node;
 
 	new_node = malloc(sizeof(*new_node));
 	if (!new_node)
-	{
-		list_clear(head);
-		exit(EXIT_FAILURE);
-	}
-  new_node->data = data;
-  new_node->next = (*head);
-  new_node->prev = NULL;
-  if ((*head) != NULL)
-    (*head)->prev = new_node;
-  (*head) = new_node;
+		return (0);
+	new_node->data = data;
+	new_node->next = *head;
+	new_node->prev = NULL;
+	if (*head)
+		(*head)->prev = new_node;
+	*head = new_node;
+	return (1);
 }
 
-/**
-** @return 1 if the node data is the biggest or else 0
-**/
-void	list_push_back(t_list_node **head, int data)
+int	list_push_back(t_list_node **head, int data)
 {
-  t_list_node *new_node;
-	t_list_node *temp;
+	t_list_node	*new_node;
+	t_list_node	*temp;
 
-  new_node = malloc(sizeof(*new_node));
+	new_node = malloc(sizeof(*new_node));
 	if (!new_node)
+		return (0);
+	new_node->data = data;
+	new_node->next = NULL;
+	temp = *head;
+	if (!*head)
 	{
-		list_clear(head);
-		exit(EXIT_FAILURE);
+		new_node->prev = NULL;
+		*head = new_node;
+		return (1);
 	}
-  new_node->data = data;
-  new_node->next = NULL;
-  temp = *head;
-  if (*head == NULL) {
-    new_node->prev = NULL;
-    *head = new_node;
-    return;
-  }
-  while (temp->next != NULL)
-    temp = temp->next;
-  temp->next = new_node;
-  new_node->prev = temp;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new_node;
+	new_node->prev = temp;
+	return (1);
 }
 
 void	list_pop_front(t_list_node **head)
 {
-	t_list_node *curr;
+	t_list_node	*curr;
 
-	if ((*head) == NULL)
+	if (!*head)
 		return ;
 	curr = *head;
 	*head = (*head)->next;
@@ -90,15 +79,14 @@ void	list_pop_front(t_list_node **head)
 
 void	list_pop_back(t_list_node **head)
 {
-	t_list_node *curr;
-	t_list_node *prev;
+	t_list_node	*curr;
+	t_list_node	*prev;
 
-	if ((*head) == NULL)
+	if (!*head)
 		return ;
 	curr = *head;
-	while (curr->next != NULL) {
-			curr = curr->next;
-	}
+	while (curr->next)
+		curr = curr->next;
 	prev = curr->prev;
 	prev->next = NULL;
 	curr->prev = NULL;
