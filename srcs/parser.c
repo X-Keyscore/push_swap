@@ -33,6 +33,9 @@ long	ft_atoi(const char *nptr)
 	i = 0;
 	neg = 1;
 	res = 0;
+	while (nptr[i] == ' ' || nptr[i] == '\n' || nptr[i] == '\t'
+		|| nptr[i] == '\v' || nptr[i] == '\f' || nptr[i] == '\r')
+		i++;
 	if (nptr[i] == '-' || nptr[i] == '+')
 	{
 		if (nptr[i] == '-')
@@ -47,30 +50,46 @@ long	ft_atoi(const char *nptr)
 	return (res * neg);
 }
 
+int	is_int(char *s, size_t start, size_t end)
+{
+	end = end - start;
+	if (s[start] == '+')
+		end--;
+	if (s[start] == '-' && end > 11)
+		return (0);
+	else if (s[start] != '-' && end > 10)
+		return (0);
+	if (s[start] == '-' && end > 10 && ft_atoi(s) < INT_MIN)
+		return (0);
+	else if (s[start] != '-' && end > 9 && ft_atoi(s) > INT_MAX)
+		return (0);
+	return (1);
+}
+
 int	is_digit_int(char *s)
 {
 	size_t	i;
+	size_t	start;
 
-	if (!s)
-		return (0);
 	i = 0;
-	if (s[0] == '-' || s[0] == '+')
+	if (!s || !s[i])
+		return (0);
+	while (s[i] == ' ')
 		i++;
-	while (s[i])
-	{
-		if (!(s[i] >= '0' && '9' >= s[i]))
-			return (0);
+	start = i;
+	if (s[i] && (s[i] == '-' || s[i] == '+'))
 		i++;
-	}
-	if (s[0] == '+')
-		i--;
-	if (s[0] == '-' && i > 11)
+	if (!s[i])
 		return (0);
-	else if (s[0] != '-' && i > 10)
+	while (s[i] >= '0' && '9' >= s[i])
+		i++;
+	if (!(s[i - 1] >= '0' && '9' >= s[i - 1]) || !is_int(s, start, i))
 		return (0);
-	if (s[0] == '-' && i > 10 && ft_atoi(s) < INT_MIN)
-		return (0);
-	else if (s[0] != '-' && i > 9 && ft_atoi(s) > INT_MAX)
+	if (!s[i])
+		return (1);
+	while (s[i] == ' ')
+		i++;
+	if (s[i])
 		return (0);
 	return (1);
 }
@@ -82,9 +101,9 @@ void	parser(int argc, char **argv, t_list_node **head)
 	i = 1;
 	while (i < argc)
 	{
-		ctrl_err(is_digit_int(argv[i]), head, NULL);
-		ctrl_err(list_push_back(head, ft_atoi(argv[i])), head, NULL);
+		ctrl_err(head, NULL, is_digit_int(argv[i]));
+		ctrl_err(head, NULL, list_push_back(head, ft_atoi(argv[i])));
 		i++;
 	}
-	ctrl_err(!list_peer(*head), head, NULL);
+	ctrl_err(head, NULL, !list_peer(*head));
 }

@@ -34,9 +34,6 @@ int	list_push_front(t_list_node **head, int data)
 		return (0);
 	new_node->data = data;
 	new_node->next = *head;
-	new_node->prev = NULL;
-	if (*head)
-		(*head)->prev = new_node;
 	*head = new_node;
 	return (1);
 }
@@ -46,49 +43,46 @@ int	list_push_back(t_list_node **head, int data)
 	t_list_node	*new_node;
 	t_list_node	*temp;
 
-	new_node = malloc(sizeof(*new_node));
+	new_node = (t_list_node *)malloc(sizeof(t_list_node));
 	if (!new_node)
 		return (0);
 	new_node->data = data;
 	new_node->next = NULL;
-	temp = *head;
 	if (!*head)
 	{
-		new_node->prev = NULL;
 		*head = new_node;
 		return (1);
 	}
+	temp = *head;
 	while (temp->next)
 		temp = temp->next;
 	temp->next = new_node;
-	new_node->prev = temp;
 	return (1);
 }
 
 void	list_pop_front(t_list_node **head)
 {
-	t_list_node	*curr;
+	t_list_node	*del;
 
 	if (!*head)
 		return ;
-	curr = *head;
+	del = *head;
 	*head = (*head)->next;
-	curr->next = NULL;
-	free(curr);
+	del->next = NULL;
+	free(del);
 }
 
 void	list_pop_back(t_list_node **head)
 {
-	t_list_node	*curr;
+	t_list_node	*del;
 	t_list_node	*prev;
 
 	if (!*head)
 		return ;
-	curr = *head;
-	while (curr->next)
-		curr = curr->next;
-	prev = curr->prev;
+	prev = *head;
+	while (prev->next->next)
+		prev = prev->next;
+	del = prev->next;
 	prev->next = NULL;
-	curr->prev = NULL;
-	free(curr);
+	free(del);
 }

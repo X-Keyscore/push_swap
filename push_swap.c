@@ -12,16 +12,17 @@
 
 #include "./push_swap.h"
 
-void	ctrl_err(int success, t_list_node **stack_1, t_list_node **stack_2)
+int	ctrl_err(t_list_node **stack_1, t_list_node **stack_2, int success)
 {
 	if (success)
-		return ;
+		return (1);
 	putstr("Error\n", 2);
 	if (stack_1)
 		list_clear(stack_1);
 	if (stack_2)
 		list_clear(stack_2);
 	exit(EXIT_FAILURE);
+	return (0);
 }
 
 int	main(int argc, char **argv)

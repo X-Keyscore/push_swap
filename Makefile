@@ -13,7 +13,7 @@
 NAME   = push_swap
 LIBFTDIR = libft/
 CC     = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 SRCS   = push_swap.c \
 				srcs/list.c \
@@ -21,9 +21,12 @@ SRCS   = push_swap.c \
 				srcs/parser.c \
 				srcs/instruction.c \
 				srcs/algorithm.c \
+				srcs/algorithm_f_utils.c \
+				srcs/algorithm_f_tcheck.c \
 				srcs/algorithm_f_smallest.c \
 				srcs/algorithm_f_biggest.c \
 				srcs/algorithm_f_inferior.c \
+				srcs/algorithm_f_superior.c \
 
 OBJS = ${SRCS:.c=.o}
 

@@ -59,7 +59,7 @@ int	rra_rrb(t_list_node **stack, int mode)
 
 	if (!*stack)
 		return (1);
-	tmp = (*stack);
+	tmp = *stack;
 	while (tmp->next)
 		tmp = tmp->next;
 	if (!list_push_front(stack, tmp->data))
@@ -69,5 +69,30 @@ int	rra_rrb(t_list_node **stack, int mode)
 		putstr("rra\n", 1);
 	else
 		putstr("rrb\n", 1);
+	return (1);
+}
+
+/**
+** @brief Swap element on stack.
+*/
+int	sa_sb(t_list_node **stack, int mode)
+{
+	int	tmp_1;
+	int	tmp_2;
+
+	if (!*stack || !(*stack)->next)
+		return (1);
+	tmp_1 = (*stack)->data;
+	list_pop_front(stack);
+	tmp_2 = (*stack)->data;
+	list_pop_front(stack);
+	if (!list_push_front(stack, tmp_1))
+		return (0);
+	if (!list_push_front(stack, tmp_2))
+		return (0);
+	if (mode == 0)
+		putstr("sa\n", 1);
+	else
+		putstr("sb\n", 1);
 	return (1);
 }
