@@ -13,7 +13,7 @@
 NAME   = push_swap
 LIBFTDIR = libft/
 CC     = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 
 SRCS   = push_swap.c \
 				srcs/list.c \
