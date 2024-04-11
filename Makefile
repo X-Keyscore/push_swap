@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME   = push_swap
-LIBFTDIR = libft/
+
 CC     = gcc
 CFLAGS = -Wall -Wextra -Werror
 
